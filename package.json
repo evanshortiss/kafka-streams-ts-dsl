@@ -1,0 +1,32 @@
+{
+  "name": "kstreams",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "format": "prettier test/**/*.ts src/**/*.ts --write --single-quote --trailing-comma=none",
+    "example": "npm run compile && node example/index.js",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test && npm run format"
+    }
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/debug": "^4.1.5",
+    "@types/faker": "^5.1.2",
+    "@types/node": "^14.11.8",
+    "faker": "^5.1.0",
+    "prettier": "~2.1.2",
+    "typescript": "~4.0.3"
+  },
+  "dependencies": {
+    "debug": "^4.2.0",
+    "kafkajs": "~1.14.0"
+  }
+}
