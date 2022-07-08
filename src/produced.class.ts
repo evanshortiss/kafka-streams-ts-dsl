@@ -1,29 +1,39 @@
-import { Serdes } from './serdes';
+import { BufferSerde, JsonSerde, NumberSerde, SerdeBase, Serdes, StringSerde } from "./serdes";
+
+// export type TypeName = Types.String|Types.Buffer|Types.JSON|Types.Buffer
 
 export class Produced {
-  private ks: Serdes.Serde<unknown>;
-  private vs: Serdes.Serde<unknown>;
+  private ksInstance: Serde
+  private vsInstance: Serde
 
-  private constructor(
-    protected keySerdeClass: Serdes.ValidSerdes,
-    protected valueSerdeClass: Serdes.ValidSerdes
-  ) {
-    this.ks = new keySerdeClass();
-    this.vs = new valueSerdeClass();
+  private constructor (protected ks: Serdes.Types, protected vs: Serdes.Types) {
+    this.ksInstance = this.createSerde(ks)
+    this.vsInstance = this.createSerde(vs)
   }
 
-  public static with(
-    keySerde: Serdes.ValidSerdes,
-    valueSerde: Serdes.ValidSerdes
-  ) {
-    return new Produced(keySerde, valueSerde);
+  private createSerde (st: Serdes.Types) {
+    if (st === Serdes.Types.Buffer) {
+      return new BufferSerde()
+    } else if (st === Serdes.Types.JSON) {
+      return new JsonSerde()
+    } else if (st === Serdes.Types.String) {
+      return new StringSerde()
+    } else if (st === Serdes.Types.Number) {
+      return new NumberSerde()
+    } else {
+      throw new Error(`Invalid Serde type "${st}" passed to Produced`)
+    }
   }
 
-  getKeySerde() {
-    return this.ks;
+  public static with <KS extends Serdes.Types, VS extends Serdes.Types> (ks: KS, vs: VS) {
+    return new Produced(ks, vs)
   }
 
-  getValueSerde() {
-    return this.vs;
+  getKeySerde () {
+    return this.ksInstance
+  }
+
+  getValueSerde () {
+    return this.vsInstance
   }
 }

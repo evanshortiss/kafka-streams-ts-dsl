@@ -2,12 +2,12 @@
   "name": "kstreams",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "compile": "tsc",
     "format": "prettier test/**/*.ts src/**/*.ts --write --single-quote --trailing-comma=none",
     "example": "npm run compile && node example/index.js",
-    "test": "echo \"Error: no test specified\" && exit 0"
+    "test": "ts-node node_modules/tape/bin/tape test/*.ts"
   },
   "husky": {
     "hooks": {
@@ -21,8 +21,11 @@
     "@types/debug": "^4.1.5",
     "@types/faker": "^5.1.2",
     "@types/node": "^14.11.8",
+    "@types/tape": "^4.13.0",
     "faker": "^5.1.0",
     "prettier": "~2.1.2",
+    "tape": "^5.2.2",
+    "ts-node": "^10.0.0",
     "typescript": "~4.0.3"
   },
   "dependencies": {

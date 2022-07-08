@@ -1,23 +1,28 @@
-import { Serdes } from "./serdes";
+import { AbstractSerde } from "./serdes";
 
-export class Consumed {
-  private ks: Serdes.Serde<unknown>
-  private vs: Serdes.Serde<unknown>
+export class Consumed <K, V> {
+  private ksInstance: AbstractSerde
+  private vsInstance: AbstractSerde
 
-  private constructor (protected keySerdeClass: Serdes.ValidSerdes, protected valueSerdeClass: Serdes.ValidSerdes) {
-    this.ks = new keySerdeClass()
-    this.vs = new valueSerdeClass()
+  private constructor (protected ks: AbstractSerde<K>, protected vs: AbstractSerde<V>) {
+    this.ksInstance = ks
+    this.vsInstance = vs
   }
 
-  public static with (keySerde: Serdes.ValidSerdes, valueSerde: Serdes.ValidSerdes) {
-    return new Consumed(keySerde, valueSerde)
+  public static with<
+    KD extends AbstractSerde,
+    KT extends ReturnType<KD['deserialize']>,
+    VD extends AbstractSerde,
+    VT extends ReturnType<VD['deserialize']>
+  > (ks: AbstractSerde, vs: VT) {
+    return new Consumed<KT, VT>(ks as AbstractSerde<KT>, vs as AbstractSerde<VT>)
   }
 
   getKeySerde () {
-    return this.ks
+    return this.ksInstance
   }
 
   getValueSerde () {
-    return this.vs
+    return this.vsInstance
   }
 }

@@ -26,17 +26,20 @@ const builder = new StreamsBuilder({
 
 // Build a KStream that filters and maps data to a new topic
 builder
-  .stream<String, DataType>(
+  .stream<string, DataType>(
     TOPIC_SRC,
-    Consumed.with(Serdes.StringSerde, Serdes.JsonSerde)
+    Consumed.with(Serdes.Types.String, Serdes.Types.JSON)
   )
-  .filter((k, v) => {
-    return v.age > 21
+  .filter((record) => {
+    return record.getValue().age > 21
   })
-  .map((k, v) => {
-    return KeyValue.pair(v.name, v.age);
+  .map((record) => {
+    return KeyValue.pair(record.getValue().name, record.getValue().age)
   })
-  .to(TOPIC_DEST, Produced.with(Serdes.StringSerde, Serdes.NumberSerde));
+  // .filter((k, v) => {
+  //   return v.age > 21
+  // })
+  .to(TOPIC_DEST, Produced.with(Serdes.Types.String, Serdes.Types.Number));
 
 
 pc(TOPIC_SRC, TOPIC_DEST, log)
